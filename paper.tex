@@ -117,9 +117,40 @@ sizes in recent years~\citep[e.g.][]{bycroft_genome_2018,halldorsson_sequences_2
 all_genomic_2024} there is a pressing need for more statistical
 rigor in large scale ARG inference.
 
+Model-based inference is a central element of population genetics.
+The coalescent~\citep{kingman_genealogy_1982,kingman_coalescent_1982,hudson_testing_1983,
+tajima_evolutionary_1983} has proved to be a useful model, and is the
+basis of a wide variety of inferences [some citations?]. The incorporation
+of recombination in to the coalescent process~\citep{hudson_properties_1983}
+has proved to be much more difficult.
+% FIXME rephrase, next two sentences, lifted from ARG paper
+Early work on inference under the coalescent with recombination
+focused on the problem of
+inferring the parameters of the
+stochastic process, where the ancestry was regarded as a
+latent parameter to be averaged out
+\citep[e.g.][]{griffiths_ancestral_1996,kuhner_maximum_2000,
+nielsen_estimation_2000,
+fearnhead_estimating_2001}.
+% TODO reuse some of the ideas from the SMC paper here, it has
+% some good explanations.
+These methods met with limited success
+because the state space of ARGs is overwhelmingly large, and
+lacks a simple geometry or neighbourhood structure for inference or
+sampling methods to  exploit.
+The introduction of the Sequentially Markovian Coalescent (SMC)
+approximation to the coalescent with recombination
+by~\cite{mcvean_approximating_2005} was a seminal contribution,
+and has made many different inferences
+% TODO add some more recent stuff
+feasible~\citep[e.g.]{li_inference_2011,paul_accurate_2011,schiffels_inferring_2014}.
+In particular, the SMC is the basis for ARG sampling methods
+like ARGweaver~\citep{rasmussen_genome-wide_2014}, which remains the
+% TODO list other places ARGweaver has come out on top in terms of accuracy.
+gold-standard in terms of accuracy~\citep{brandt2022evaluation}
+
 
 \begin{itemize}
-    \item Models are good/essential: CwR useful but terrible for inference -> SMC
     \item Problem: we can't use models on inferred ARGs (Relate, tsinfer, ARGneedle). These methods produce point estimates. What we can't do:
         \begin{itemize}
             \item quantify uncertainty
@@ -256,7 +287,7 @@ completeness that characterise the current state of the field of ARG reconstruct
 \section{Methods and Results}
 
 First, we define the SMC process in a ``backwards-in-time'' way,
-rather than the usual ``along-the-genome'' way. 
+rather than the usual ``along-the-genome'' way.
 Note that this is a
 reiteration of the original work of \citet{mcvean_approximating_2005}.
 Then, we describe
@@ -654,7 +685,7 @@ Note that we can accommodate for stepwise changes in the coalescence rate (or re
 through time by intersecting the internode intervals with the rate change intervals.
 Rate changes along the genome can equally be incorporated (see \ref{sec:slicing}).
 
-% ADD IN RESULTS: 
+% ADD IN RESULTS:
 % Figure \ref{sup:fig:vs-argweaver} shows the expected near-perfect correlation
 % between the coalescent prior as returned by \argweaver and the likelihood as computed here.
 % We simulated 1Mb of data for 10 diploid individuals
@@ -665,7 +696,7 @@ Rate changes along the genome can equally be incorporated (see \ref{sec:slicing}
 \subsection{Slicing the ARG} \label{sec:slicing}
 
 % slicing of the ARG
-By explicitly associating a single likelihood with each edge, 
+By explicitly associating a single likelihood with each edge,
 
 \comment{This makes it sound as if tskit is crucial for this observation.}
 we can compute a likelihood
@@ -680,7 +711,7 @@ the inherent ability of ARGs to provide us with temporal
 resolution on the inferred genealogical history of a sample.
 
 Do this independently for any such slice
-Although we can readily incorporate changes in $N_e$ and $r$ 
+Although we can readily incorporate changes in $N_e$ and $r$
 into the likelihood computation, both in time as well as along the genome,
 
 
@@ -690,7 +721,7 @@ for each slice independently.
 
 Figure \ref{fig:3-arg-slices} demonstrates this idea on a toy example.
 We simulated an ARG under human-like parameters and with
-two population size changes and subsequently estimated the posterior 
+two population size changes and subsequently estimated the posterior
 distribution using a uniform prior for each slice indepently.
 
 
@@ -698,17 +729,17 @@ The observation that we can associate a likelihood with any valid tree sequences
 urges the need for some caveats. By treating each edge independently we can
 naturally deal with the various degrees of completeness to which inheritance
 is documented by the different ARG inference methods: e.g.\ polytomies, absence
-of locally unary coalescence nodes, unpreserved identify of internal nodes 
+of locally unary coalescence nodes, unpreserved identify of internal nodes
 across marginal trees, \dots However, these imprecisions do violate the implicit
 assumptions of the likelihood computation.
 \comment{Do we want these remarks in here, or as part of the Discussion?}
 For example, the described algorithm relies heavily on the
-presence of locally unary nodes in the tree sequence to correctly identify the 
+presence of locally unary nodes in the tree sequence to correctly identify the
 full extent of all lineages going back through time and therefore recombination
 events. Without unary nodes though, our algorithm will detect a recombination
 event along both coalescing lineages in case of a (sub)tree height changes along
 the ARG as both edges would switch parent nodes. This can be mitigated by limiting
-the number of 'inferrable' recombination events per coalescence event to 1 
+the number of 'inferrable' recombination events per coalescence event to 1
 (see fig \ref{sup:fig:rec-correction}).
 
 \comment{this was previously part of the discussion, have grouped it here.}
@@ -717,9 +748,9 @@ ARG, the concept and their importance are still relatively new (but see
 \citet{wong_general_2023}).
 We have briefly touched upon the observation that in
 the presence of unary nodes we seem to augment the left-to-right logic of the SMC
-with some additional information. Yet, we believe that the topic of locally 
+with some additional information. Yet, we believe that the topic of locally
 unary nodes in general requires further exploration.
-And more specifically, we see it as future work to fully quantify to what 
+And more specifically, we see it as future work to fully quantify to what
 extent the absence of these locally unary nodes will affect the shape of the
 likelihood surface given any set of parameters.
 
